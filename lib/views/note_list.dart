@@ -82,9 +82,7 @@ class _NoteListState extends State<NoteList> {
                       });
                       final deleteResult = await service
                           .deleteNote(_apiResponse.data[index].noteID);
-                      setState(() {
-                        _isLoading = false;
-                      });
+                      _fetchNotes();
                       var message;
                       if (deleteResult != null && deleteResult.data == true) {
                         message = 'The note was deleted successfully';

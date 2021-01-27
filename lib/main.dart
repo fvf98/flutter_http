@@ -13,6 +13,8 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
+  static const commandForBuildRunner =
+      'flutter packages run build_runner build --delete-conflicting-outputs';
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
