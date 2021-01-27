@@ -56,10 +56,13 @@ class _NoteListState extends State<NoteList> {
         ),
         body: Builder(
           builder: (_) {
-            if (_isLoading) return Center(child: CircularProgressIndicator());
+            if (_isLoading) {
+              return Center(child: CircularProgressIndicator());
+            }
 
-            if (_apiResponse.error)
+            if (_apiResponse.error) {
               return Center(child: Text(_apiResponse.errorMessage));
+            }
 
             return ListView.separated(
               separatorBuilder: (_, __) =>
@@ -72,6 +75,40 @@ class _NoteListState extends State<NoteList> {
                   confirmDismiss: (direction) async {
                     final result = await showDialog(
                         context: context, builder: (_) => NoteDelete());
+
+                    if (result) {
+                      setState(() {
+                        _isLoading = true;
+                      });
+                      final deleteResult = await service
+                          .deleteNote(_apiResponse.data[index].noteID);
+                      setState(() {
+                        _isLoading = false;
+                      });
+                      var message;
+                      if (deleteResult != null && deleteResult.data == true) {
+                        message = 'The note was deleted successfully';
+                      } else {
+                        message =
+                            deleteResult?.errorMessage ?? 'An error occured';
+                      }
+
+                      showDialog(
+                          context: context,
+                          builder: (_) => AlertDialog(
+                                title: Text('Done'),
+                                content: Text(message),
+                                actions: <Widget>[
+                                  FlatButton(
+                                      child: Text('Ok'),
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      })
+                                ],
+                              ));
+
+                      return deleteResult?.data ?? false;
+                    }
                     print(result);
                     return result;
                   },
