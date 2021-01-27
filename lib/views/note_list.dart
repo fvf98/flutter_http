@@ -14,8 +14,10 @@ class NoteList extends StatefulWidget {
 
 class _NoteListState extends State<NoteList> {
   NotesService get service => GetIt.I<NotesService>();
+
   APIResponse<List<NoteForListing>> _apiResponse;
   bool _isLoading = false;
+
   String formatDateTime(DateTime dateTime) {
     return '${dateTime.day}/${dateTime.month}/${dateTime.year}';
   }
